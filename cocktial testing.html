@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Vintage Bar - Cocktail for you</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @font-face {
+            font-family: 'OldStandardTT';
+            src: url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap');
+        }
+        
+        body {
+            background-color: #12100c;
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
+                url('https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=2674&blur=25');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Roboto', sans-serif;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 40px 0;
+        }
+        
+        /* 简化木质纹理和灯光效果 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 50% 30%, rgba(255, 215, 100, 0.03) 0%, transparent 70%);
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: -1;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* 减少装饰元素，仅保留一个主要装饰 */
+        .decoration {
+            display: none;
+            opacity: 0;
+            z-index: -1;
+        }
+        
+        .decoration.glass {
+            bottom: 15%;
+            right: 5%;
+            width: 180px;
+            height: 180px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/1730/1730777.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        
+        /* 移除其他装饰元素 */
+        .decoration.saxophone,
+        .decoration.bottle,
+        .decoration.vinyl {
+            display: none;
+        }
+        
+        /* 优化吊灯装饰，使其更加精致 */
+        .chandelier {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 100px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/2982/2982512.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            z-index: 10;
+        }
+        
+        /* 简化光晕效果 */
+        .light-glow {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 100, 0.1) 0%, transparent 70%);
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background-color: rgba(20, 16, 12, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            border: 1px solid rgba(205, 164, 94, 0.2);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        /* 简化木质纹理边框 */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', 'OldStandardTT', serif;
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #cda45e;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .tagline {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 40px;
+            font-weight: 300;
+            color: #cda45e;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+        
+        .input-group {
+            margin-top: 30px;
+            position: relative;
+        }
+        
+        input {
+            width: 100%;
+            padding: 18px 20px;
+            border-radius: 6px;
+            border: 1px solid rgba(205, 164, 94, 0.5);
+            font-size: 16px;
+            background-color: rgba(31, 24, 17, 0.5);
+            color: #e0e0e0;
+            transition: all 0.3s ease;
+            outline: none;
+            font-family: 'Roboto', sans-serif;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        input::placeholder {
+            color: rgba(205, 164, 94, 0.5);
+        }
+        
+        input:focus {
+            border-color: rgba(205, 164, 94, 0.8);
+            box-shadow: 0 0 15px rgba(205, 164, 94, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.3);
+            background-color: rgba(31, 24, 17, 0.7);
+        }
+        
+        button {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #8a6d3b, #cda45e);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Roboto', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(205, 164, 94, 0.3);
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        button:hover {
+            box-shadow: 0 4px 15px rgba(205, 164, 94, 0.4);
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #97784a, #d9b36d);
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .loading-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #cda45e;
+            margin: 0 5px;
+            opacity: 0;
+            animation: dot-fade 1.4s infinite ease-in-out;
+        }
+        
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes dot-fade {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        .result {
+            margin-top: 40px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+            background-color: rgba(31, 24, 17, 0.6);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(205, 164, 94, 0.2);
+            display: none; /* 初始隐藏 */
+        }
+        
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .result-text {
+            padding: 25px;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #e0e0e0;
+        }
+        
+        .result-image {
+            width: 100%;
+            border-radius: 0 0 6px 6px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .result-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* 霓虹边框 */
+        .neon-border {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(205, 164, 94, 0.5), transparent);
+            animation: neon-glow 3s infinite;
+        }
+        
+        @keyframes neon-glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        /* 弹出结果界面 */
+        .result-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.85);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
+                url('https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=2674&blur=25');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+        }
+        
+        .result-popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .popup-content {
+            width: 90%;
+            max-width: 900px;
+            background-color: rgba(20, 16, 12, 0.85);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            border: 1px solid rgba(205, 164, 94, 0.15);
+            position: relative;
+            transition: all 0.5s ease;
+            transform: scale(0.9);
+            margin: 40px 0;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        /* 简化弹窗装饰 */
+        .popup-content::before {
+            content: none;
+        }
+        
+        /* 金色线条装饰 - 简化版 */
+        .popup-content::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(205, 164, 94, 0.3), transparent);
+            pointer-events: none;
+        }
+        
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            padding-left: 0; /* 移除左侧内边距，因为不再需要为内部返回按钮留空间 */
+        }
+        
+        /* 移除内部返回按钮的样式 */
+        .popup-back {
+            display: none; /* 隐藏内部返回按钮 */
+        }
+        
+        /* 固定返回按钮位置 - 简化设计 */
+        .popup-fixed-back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(138, 109, 59, 0.2);
+            color: #cda45e;
+            border: 1px solid rgba(205, 164, 94, 0.3);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            z-index: 200;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .result-popup.show .popup-fixed-back {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .popup-fixed-back:hover {
+            background: rgba(138, 109, 59, 0.4);
+            box-shadow: 0 2px 8px rgba(205, 164, 94, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .popup-title {
+            font-family: 'Playfair Display', 'OldStandardTT', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #cda45e;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 100%;
+            padding: 0 50px;
+            letter-spacing: 1px;
+        }
+        
+        .popup-text {
+            padding: 20px 0;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #e0e0e0;
+            margin-bottom: 30px;
+        }
+        
+        .popup-image {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(205, 164, 94, 0.2);
+        }
+        
+        .popup-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 32px;
+            }
+            
+            .decoration.saxophone, .decoration.bottle, .decoration.glass, .decoration.vinyl {
+                display: none;
+            }
+            
+            .popup-content {
+                padding: 30px 20px;
+            }
+            
+            .popup-title {
+                font-size: 24px;
+            }
+        }
+        
+        .music-player {
+            display: none; /* 隐藏音乐播放器 */
+        }
+        
+        /* 去除木质纹理 */
+        .wood-grain {
+            display: none;
+        }
+
+        /* 金色线条装饰 - 简化版 */
+        .container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(205, 164, 94, 0.3), transparent);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="wood-grain"></div>
+    
+    <div class="container">
+        <div class="chandelier"></div>
+        <div class="light-glow"></div>
+        <h1>The Vintage Bar</h1>
+        <p class="tagline">为您调制一杯专属记忆的味道</p>
+        
+        <div class="input-group">
+            <input type="text" id="userInput" placeholder="夏夜、晚秋、思念、以及任何心中所想..." />
+            <button id="submitBtn">微醺一下</button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+        
+        <div class="result" id="result">
+            <div class="result-text" id="resultText"></div>
+            <div class="result-image" id="resultImage">
+                <img id="generatedImage" src="" alt="鸡尾酒图片" />
+                <div class="neon-border"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 弹出结果界面 -->
+    <div class="result-popup" id="resultPopup">
+        <button class="popup-fixed-back" id="fixedBackButton">←</button>
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2 class="popup-title">为您精心调制</h2>
+            </div>
+            <div class="popup-text" id="popupText"></div>
+            <div class="popup-image">
+                <img id="popupImage" src="" alt="鸡尾酒图片" />
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const userInput = document.getElementById('userInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const resultText = document.getElementById('resultText');
+        const generatedImage = document.getElementById('generatedImage');
+        const resultPopup = document.getElementById('resultPopup');
+        const popupText = document.getElementById('popupText');
+        const popupImage = document.getElementById('popupImage');
+        const fixedBackButton = document.getElementById('fixedBackButton');
+        
+        // 返回按钮事件
+        fixedBackButton.addEventListener('click', closePopup);
+        
+        // 关闭弹窗函数
+        function closePopup() {
+            resultPopup.classList.remove('show');
+            setTimeout(() => {
+                userInput.value = '';
+                userInput.focus();
+            }, 500);
+        }
+        
+        // Coze API接口URL
+        const COZE_API_URL = "https://api.coze.cn/v1/workflow/run";
+        // 替换为你的实际API密钥
+        const API_KEY = "pat_ye89RC85y15DIvYHO30LE1bifpLzAZYB6LcptN1bRezBl6ZahN3vtxip3Vc25TE5"; // 请替换为你的实际API密钥
+        // 替换为你的实际工作流ID
+        const WORKFLOW_ID = "7488410318826373172"; // 请替换为你的实际工作流ID
+        
+        submitBtn.addEventListener('click', async () => {
+            const query = userInput.value.trim();
+            
+            if (!query) {
+                alert('请输入您的口味偏好');
+                return;
+            }
+            
+            // 显示加载状态
+            loading.style.display = 'block';
+            result.classList.remove('show');
+            
+            try {
+                // 添加请求数据调试日志
+                console.log('发送请求到工作流，参数:', query);
+                
+                // 由于浏览器的同源策略，直接调用可能会遇到CORS问题
+                // 方案一：使用代理服务器（推荐）
+                // 如果有自己的后端服务，可以通过后端转发请求
+                
+                // 方案二：临时测试可以使用CORS代理服务（仅用于开发测试）
+                // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+                // const apiUrlWithProxy = proxyUrl + COZE_API_URL;
+                
+                // 方案三：如果是本地开发，可以使用浏览器插件临时禁用CORS
+                // 如Chrome的"Allow CORS"插件
+                
+                // 下面提供两种调用方式，根据实际情况选择
+
+                // 1. 直接调用（如果API支持CORS或使用了浏览器插件）
+                const response = await fetch(COZE_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "workflow_id": WORKFLOW_ID,
+                        "parameters": {
+                            "input": query
+                        }
+                    })
+                });
+                
+                // 2. 使用代理（取消注释以启用）
+                /*
+                const response = await fetch(apiUrlWithProxy, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest' // 有些代理服务需要这个头
+                    },
+                    body: JSON.stringify({
+                        "workflow_id": WORKFLOW_ID,
+                        "parameters": {
+                            "input": query
+                        }
+                    })
+                });
+                */
+                
+                const responseData = await response.json();
+                
+                // 添加响应数据调试日志
+                console.log('工作流响应数据:', responseData);
+                
+                // 检查API响应
+                if (responseData.code === 0) {
+                    // 解析返回的数据
+                    const parsedData = JSON.parse(responseData.data);
+                    console.log('解析后的数据:', parsedData);
+                    
+                    // 根据工作流实际输出格式获取文本和图片URL
+                    // 从截图可以看出，文本在output字段，图片在pic字段
+                    const resultData = {
+                        text: parsedData.output || "",
+                        imageUrl: parsedData.pic || ""
+                    };
+                    
+                    // 显示结果
+                    resultText.innerHTML = resultData.text.replace(/\n/g, '<br>');
+                    popupText.innerHTML = resultData.text.replace(/\n/g, '<br>');
+                    
+                    // 如果返回了图片URL，显示图片
+                    if (resultData.imageUrl) {
+                        // 移除图片URL的引号
+                        const cleanImageUrl = resultData.imageUrl.replace(/["']/g, '');
+                        generatedImage.src = cleanImageUrl;
+                        popupImage.src = cleanImageUrl;
+                        document.getElementById('resultImage').style.display = 'block';
+                    } else {
+                        document.getElementById('resultImage').style.display = 'none';
+                    }
+                    
+                    // 添加调试链接
+                    if (responseData.debug_url) {
+                        // 不显示调试链接
+                    }
+                    
+                    // 隐藏加载状态，显示结果
+                    loading.style.display = 'none';
+                    
+                    // 显示弹出结果界面，而不是原来的结果区域
+                    setTimeout(() => {
+                        resultPopup.classList.add('show');
+                    }, 300);
+                } else {
+                    throw new Error(`API返回错误: ${responseData.msg || '未知错误'}`);
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                resultText.textContent = `发生错误: ${error.message}\n\n可能原因:\n1. API密钥无效或已过期\n2. 工作流ID不正确\n3. 浏览器跨域(CORS)问题\n4. 网络连接问题`;
+                document.getElementById('resultImage').style.display = 'none';
+                
+                // 隐藏加载状态，显示错误结果
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html> 
